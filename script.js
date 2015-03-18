@@ -45,7 +45,7 @@ function __getEventClickOffset(event){
     }
 }
 
-// Ajax requests
+// XML Http requests
 var Request = {
     __onreadystatechange: function(request,onSuccess, onFail){
         return function(){
@@ -76,7 +76,7 @@ var Flickr = {
             api_key: this.__apiKey,
             method: method,
             format: 'json',
-            nojsoncallback: 1,
+            nojsoncallback: 1, // Get pure JSON
             content_type: 1 // Photos only
         })
 
@@ -109,6 +109,7 @@ var Flickr = {
 
 var Gallery = {
     photos: (function(){
+        // Use local storage if available, else use standard object
         return (localStorage !== undefined) ? localStorage : {};
     })(),
     add: function(photo){
@@ -219,7 +220,6 @@ $('search-form').onsubmit =  function(){
     $('search-results').innerHTML = '';
     SearchButton.start();
     Flickr.search($('search-input').value,function(response){
-        console.log(response);
         response.photos.photo.each(function(photo){
             var photoEl = Gallery.__createPhotoElement(photo);
             photoEl.className += ' add-overlay';
